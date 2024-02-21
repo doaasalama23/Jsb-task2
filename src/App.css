@@ -5,3 +5,38 @@
 .overlay{
     background: linear-gradient(45deg,rgba(47,140,96,0.4), rgba(0,0,0,0.4));
 }
+.sidebar-container .ps-sidebar-container{
+   background-color: #1F263E;
+   color: #fff;
+   height: 100vh;
+}
+.sidebar-container .ps-sidebar-container .ps-menu-button:hover{
+background-color: rgba(0, 176, 77, .3);
+}
+.hamada{
+    text-align: center;
+}
+.sidebar-container .ps-sidebar-container .ps-menu-button img{
+    width: 130px;
+}
+.back-g{
+    background-image: url(./assets/images/back.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    padding: 40px;
+    box-sizing: border-box;
+    border-radius: 20px;
+}
+.moday{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.fa-trash{
+    color: red;
+}
+.fa-edit{
+    color: yellow;
+}

@@ -44,9 +44,9 @@ function App() {
     {
       path:'dashboard',
       element:(<ProtectedRoute adminData={adminData}><MasterLayout adminData={adminData}/></ProtectedRoute>),
-      errorElement:<Notfound />,
+      // errorElement:<Notfound />,
       children:[
-        {index:true,element:<Home/>},
+        {index:true,element:<Home adminData={adminData}/>},
         {path:'recipes',element:<Recipes/>},
         {path:'users',element:<UsersList/>},
         {path:'categories',element:<Categories/>},
