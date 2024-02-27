@@ -3,6 +3,7 @@ import Modal from 'react-bootstrap/Modal';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 export default function Update({catId,getList}) {
+  const [categoryName, setcategoryName] = useState();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -10,7 +11,7 @@ export default function Update({catId,getList}) {
   const onSubmitupdate= async (data)=>{
     let token=localStorage.getItem('admintoken');
     try{
-      let response = await axios.put('https://upskilling-egypt.com:443/api/v1/Category/1',data,{ headers : {Authorization:token}});
+      let response = await axios.put(`https://upskilling-egypt.com:443/api/v1/Category/${catId}`,data,{ headers : {Authorization:token}});
       console.log(response);
       getList();
       handleClose();
@@ -19,8 +20,8 @@ export default function Update({catId,getList}) {
       }
   }; 
   useEffect(()=>{
-    getList();
-  },[]);
+    setcategoryName('name',categoryName);
+  },[categoryName]);
   return (
     <div>
       <i className='far fa-edit mx-2'onClick={handleShow}></i>

@@ -62,7 +62,8 @@ export default function Login({saveAdminData}) {
                     />
                 </div>
                 {errors.password&&<span className='alert alert-danger'>{errors.password.message}</span>}
-                  <div className='d-flex justify-content-end my-2'>
+                  <div className='d-flex justify-content-between my-2'>
+                    <Link to='/register' className='text-success'>Register now</Link>
                     <Link to='/ForgetPass' className='text-success'>Forgetpassword</Link>
                   </div>
                 <button className='w-100 btn btn-success'>Login</button>

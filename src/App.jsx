@@ -10,12 +10,14 @@ import MasterLayout from './Shared/Components/MasterLayout/MasterLayout'
 import Login from './AuthModules/Components/Login/Login'
 import Home from './HomeModules/Components/Home/Home'
 import Recipes from './RecipesModules/Components/Recipes/Recipes'
+import RecipeData from './RecipeData/RecipeData'
 import UsersList from './UsersModules/Components/UsersList/UsersList'
 import Categories from './CategoriesModules/Components/Categories/Categories'
 import ForgetPass from './AuthModules/Components/ForgetPass/ForgetPass'
 import Restpassword from './AuthModules/Components/Restpassword/Restpassword'
 import { jwtDecode } from 'jwt-decode'
 import ProtectedRoute from './Shared/Components/ProtectedRoute/ProtectedRoute'
+import Register from './AuthModules/Register/Register'
 function App() {
   const[adminData,setAdminData]=useState(null);
   const saveAdminData=()=>{
@@ -39,6 +41,7 @@ function App() {
         {path:'Login',element:<Login saveAdminData={saveAdminData}/>},
         {path:'ForgetPass',element:<ForgetPass/>},
         {path:'Restpassword',element:<Restpassword/>},
+        {path:'register',element:<Register/>},
       ],
     },
     {
@@ -48,6 +51,7 @@ function App() {
       children:[
         {index:true,element:<Home adminData={adminData}/>},
         {path:'recipes',element:<Recipes/>},
+        {path:'recipe-data',element:<RecipeData/>},
         {path:'users',element:<UsersList/>},
         {path:'categories',element:<Categories/>},
       ],

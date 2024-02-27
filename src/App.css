@@ -40,3 +40,9 @@ background-color: rgba(0, 176, 77, .3);
 .fa-edit{
     color: yellow;
 }
+.home-container{
+    background-color: #f0ffef;
+}
+.load{
+    width: 70px;
+}

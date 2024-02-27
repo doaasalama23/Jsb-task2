@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
+// import nodata from '../../assets/images/free.png';
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
-// import nodata from '../../assets/images/free.png'
 export default function Delete({catId,getList}) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -25,7 +25,7 @@ export default function Delete({catId,getList}) {
             </Modal.Header>
             <Modal.Body>
             <div className='text-center'>
-                  {/* <img src={nodata}/> */}
+                  {/* <img src={nodata} alt='ggggg'/> */}
                   <h5>delete this item?</h5>
                   <p>Are you sure you want to delete?</p>
             </div>
