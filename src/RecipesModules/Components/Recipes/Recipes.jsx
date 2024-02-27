@@ -42,8 +42,9 @@ export default function Recipes() {
   const onSubmitupdate= async (data)=>{
     let token=localStorage.getItem('admintoken');
     try{
-      let response = await axios.put(`https://upskilling-egypt.com:443/api/v1/Category/${catId}`,data,{ headers : {Authorization:token}});
+      let response = await axios.put(`https://upskilling-egypt.com:443/api/v1/Recipe/${recipeId}`,data,{ headers : {Authorization:token}});
       console.log(response);
+      navigateRecipes();
       getList();
       handleClose();
       }catch(error){
@@ -107,7 +108,7 @@ export default function Recipes() {
                   <td>{recipe.price}</td>
                   {/* <td>{recipe.category[0].name}</td> */}
                   <td>
-                  <i className='far fa-edit text-warning mx-2' onClick={navigateRecipes}></i>
+                  <i className='far fa-edit text-warning mx-2' onClick={()=>onSubmitupdate(recipe.id)}></i>
                   <i className='fa fa-trash text-danger' onClick={()=>handleShow(recipe.id)}></i>
                   </td>
                   {/* <td>
