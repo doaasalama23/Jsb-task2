@@ -4,12 +4,11 @@ import bbbb from '../../../assets/images/free.png'
 import nodata from '../../../assets/images/free.png';
 import Header from '../../../Shared/Components/Header/Header';
 import Modal from 'react-bootstrap/Modal';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate,Link } from 'react-router-dom';
 export default function Recipes() {
-  let navigate=useNavigate();
-  const navigateRecipes=()=>{
-    navigate('/dashboard/recipe-data');
-  };
+  const[recipesList,setrecipesList]=useState([]);
+  const[categoriesList,setcategoriesList]=useState([]);
+  const[tagsList,settagsList]=useState([]);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const [recipeId, setrecipeId] = useState(0);
@@ -17,13 +16,36 @@ export default function Recipes() {
     setrecipeId(id)
     setShow(true)
   };
-  const[recipesList,setrecipesList]=useState([]);
+  const navigate=useNavigate();
+  const navigateRecipes=()=>{
+    navigate('/dashboard/recipe-data');
+  };
   const getList=async()=>{
     let token=localStorage.getItem('admintoken');
     try{
         let recipesList = await axios.get('https://upskilling-egypt.com:443/api/v1/Recipe/?pageSize=10&pageNumber=1',{ headers : {Authorization:token}});
         
         setrecipesList(recipesList.data.data);
+     }catch(error){
+    console.log(error);
+     }
+  };
+  const getCategoriesList=async()=>{
+    let token=localStorage.getItem('admintoken');
+    try{
+        let categoriesList = await axios.get('https://upskilling-egypt.com:443/api/v1/Category/?pageSize=10&pageNumber=1',{ headers : {Authorization:token}});
+        console.log(categoriesList.data.data);
+        setcategoriesList(categoriesList.data.data);
+     }catch(error){
+    console.log(error);
+     }
+  };
+  const getTagList=async()=>{
+    let token=localStorage.getItem('admintoken');
+    try{
+        let tagsList = await axios.get('https://upskilling-egypt.com:443/api/v1/tag/',{ headers : {Authorization:token}});
+        console.log(tagsList.data);
+        settagsList(tagsList.data);
      }catch(error){
     console.log(error);
      }
@@ -38,21 +60,11 @@ export default function Recipes() {
       }catch(error){
       console.log(error);
       }
-  };
-  const onSubmitupdate= async (data)=>{
-    let token=localStorage.getItem('admintoken');
-    try{
-      let response = await axios.put(`https://upskilling-egypt.com:443/api/v1/Recipe/${recipeId}`,data,{ headers : {Authorization:token}});
-      console.log(response);
-      navigateRecipes();
-      getList();
-      handleClose();
-      }catch(error){
-      console.log(error);
-      }
-  };  
+  }; 
   useEffect(()=>{
     getList();
+    getCategoriesList();
+    getTagList();
   },[]);
   return (
     <div>
@@ -76,6 +88,37 @@ export default function Recipes() {
             </div>
             <div className='title-btn'>
               <button className='btn btn-success' onClick={navigateRecipes}>Add new Recipe</button>
+            </div>
+          </div>
+          <div className='row p-4'>
+            <div className='col-md-6'>
+            <input 
+                type="text" 
+                className="form-control" 
+                placeholder="Search by name" 
+              />
+            </div>
+            <div className='col-md-3'>
+            <select className="form-control" 
+                        placeholder="Enter your categoriesIds" 
+                       >
+                        <option value=''>chooes category</option>
+                        {categoriesList?.map((cat)=>
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                        )}
+                    
+              </select>
+            </div>
+            <div className='col-md-3'>
+            <select className="form-control" 
+                      placeholder="Enter your tagId" 
+                      >
+                        <option value=''>chooes tag</option>
+                      {tagsList?.map((tag)=>
+                      <option key={tag.id} value={tag.id}>{tag.name}</option>
+                      )}
+                  
+                 </select>
             </div>
           </div>
       <div className='categories-tables text-center py-4'>
@@ -108,7 +151,7 @@ export default function Recipes() {
                   <td>{recipe.price}</td>
                   {/* <td>{recipe.category[0].name}</td> */}
                   <td>
-                  <i className='far fa-edit text-warning mx-2' onClick={()=>onSubmitupdate(recipe.id)}></i>
+                 <Link to={'/dashboard/recipe-update/'+recipe.id}><i className='far fa-edit text-warning mx-2'></i></Link>
                   <i className='fa fa-trash text-danger' onClick={()=>handleShow(recipe.id)}></i>
                   </td>
                   {/* <td>

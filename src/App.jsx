@@ -18,6 +18,7 @@ import Restpassword from './AuthModules/Components/Restpassword/Restpassword'
 import { jwtDecode } from 'jwt-decode'
 import ProtectedRoute from './Shared/Components/ProtectedRoute/ProtectedRoute'
 import Register from './AuthModules/Register/Register'
+import Recepeupdate from './Recepeupdate/Recepeupdate'
 function App() {
   const[adminData,setAdminData]=useState(null);
   const saveAdminData=()=>{
@@ -52,6 +53,7 @@ function App() {
         {index:true,element:<Home adminData={adminData}/>},
         {path:'recipes',element:<Recipes/>},
         {path:'recipe-data',element:<RecipeData/>},
+        {path:'recipe-update/:id',element:<Recepeupdate/>},
         {path:'users',element:<UsersList/>},
         {path:'categories',element:<Categories/>},
       ],
