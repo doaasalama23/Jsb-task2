@@ -6,7 +6,8 @@ import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import logo from '../../../assets/images/loggo.png'
 import Changepassword from '../../../AuthModules/Components/Changepasssword/Changepassword';
-export default function SideBar() {
+export default function SideBar({adminData}) {
+  console.log(adminData);
   const[isCollapsed,setIsCollaps]=useState(false);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);

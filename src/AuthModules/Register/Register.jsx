@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import axios from 'axios';
-import {Link ,useNavigate } from 'react-router-dom';
+import {Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import logo from '../../assets/images/LOGO.png';
 export default function Register() {
-    // const navigate=useNavigate();
+    const navigate=useNavigate();
     const{register,handleSubmit,formState:{errors},}=useForm(); 
-    const appendToFormData=()=>{
+    const appendToFormData=(data)=>{
         let formData=new FormData();
             formData.append('email',data.email);
             formData.append('userName',data.userName);
@@ -17,28 +17,23 @@ export default function Register() {
             formData.append('password',data.password);
             formData.append('confirmPassword',data.confirmPassword);
             formData.append('profileImage',data.profileImage[0]);
+            formData.append("userName", data.userName);
         return formData;
     }; 
-    const onSubmit=async(data)=>{
+    const onSubmit = async (data) => {
         console.log(data);
-        let registerFormData=appendToFormData(data);
-        let token=localStorage.getItem('admintoken');
-            try{
-            let response = await axios.post('https://upskilling-egypt.com:443/api/v1/Users/Register',registerFormData,{ headers : {Authorization:token}});
-            toast.success('registraion done');
-            }
-            catch(error){
-            toast.error(error.response.data.message,{position:'top-right'});
-            }
-    //   axios.post('https://upskilling-egypt.com:443/api/v1/Users/Reset',data)
-    //   .then((response)=>{
-    //    setTimeout(toast("Wow RESET!"),2000);
-    //     navigate('/Login');
-    //   }).catch((error)=>{
-    //     toast(error.response.data.message);
-    //   })
-   
-    };
+        let registerFormData = appendToFormData(data);
+        try {
+          let response = await axios.post(
+            "https://upskilling-egypt.com:443/api/v1/Users/Register",
+            registerFormData
+          );
+          toast.success("Registeration Done ");
+             navigate("/verifyRegister");
+        } catch (errors) {
+          toast.error(errors.response.data.message);
+        }
+      };
   return (
     <div>
          <div className='Auth-container vh-100'>
@@ -63,8 +58,13 @@ export default function Register() {
                                 type="email" 
                                 className="form-control" 
                                 placeholder="Enter your E-mail" 
-                                {...register('email',{required:'email address is required',
-                            })}
+                                {...register("email", {
+                                    required: "Email is required",
+                                    pattern: {
+                                      value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
+                                      message: "Email not valid",
+                                    },
+                                  })}
                             />
                         </div>
                          {errors.email&&<span className='alert alert-danger'>{errors.email.message}</span>}
@@ -120,7 +120,7 @@ export default function Register() {
                 <div className='row'>
                      <div className='col-md-6'>
                         <div className="input-group mb-3">
-                            <span className="input-group-text" id="basic-addon1">
+                            <span className="input-group-text">
                             <i className='fa fa-key'></i>
                             </span>
                             <input 
@@ -131,39 +131,52 @@ export default function Register() {
                             })}
                             />
                         </div>
-                         {errors.country&&<span className='alert alert-danger'>{errors.country.message}</span>}
+                         {errors.password&&<span className='alert alert-danger'>{errors.password.message}</span>}
                      </div>
                      <div className='col-md-6'>
                         <div className="input-group mb-3">
-                            <span className="input-group-text" id="basic-addon1">
+                            <span className="input-group-text">
                             <i className='fa fa-key'></i>
                             </span>
                             <input 
                                 type="passwod" 
                                 className="form-control" 
                                 placeholder="confrim your Password" 
-                                {...register('confrimPassword',{required:'confrimPassword is required',
+                                {...register('confirmPassword',{required:'confirmPassword is required',
                             })}
                             />
                         </div>
-                         {errors.confrimPassword&&<span className='alert alert-danger'>{errors.confrimPassword.message}</span>}
+                         {errors.confirmPassword&&<span className='alert alert-danger'>{errors.confirmPassword.message}</span>}
                      </div>
                 </div>
                 <div className='row'>
                      <div className='col-md-12'>
                         <div className="input-group mb-3">
-                            <span className="input-group-text" id="basic-addon1">
+                            <span className="input-group-text">
                             <i className='fa fa-file'></i>
                             </span>
                             <input 
                                 type="file" 
                                 className="form-control" 
-                                {...register('profileImage',)}
+                                placeholder="No file chose"
+                          {...register("profileImage")}
                             />
                         </div>
                      </div>
                 </div>
-                  <button className='w-100 btn btn-success'>Register</button>
+                <div className="d-flex justify-content-end my-2">
+                    <Link to={"/login"} className="text-success">
+                      Login Now?
+                    </Link>
+                  </div>
+                  <div className="row justify-content-center">
+                  {/* <Link to={"/verifyRegister"} className="w-75 btn btn-success mt-5 p-2">
+                         Register
+                    </Link> */}
+                    <button className="w-75 btn btn-success mt-5 p-2">
+                      Register
+                    </button>
+                  </div>
               </form>
             </div>
         </div>

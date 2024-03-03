@@ -19,6 +19,7 @@ import { jwtDecode } from 'jwt-decode'
 import ProtectedRoute from './Shared/Components/ProtectedRoute/ProtectedRoute'
 import Register from './AuthModules/Register/Register'
 import Recepeupdate from './Recepeupdate/Recepeupdate'
+import VerifyRegister from './AuthModules/VerifyRegister/VerifyRegister'
 function App() {
   const[adminData,setAdminData]=useState(null);
   const saveAdminData=()=>{
@@ -43,6 +44,7 @@ function App() {
         {path:'ForgetPass',element:<ForgetPass/>},
         {path:'Restpassword',element:<Restpassword/>},
         {path:'register',element:<Register/>},
+        { path: 'verifyRegister', element: <VerifyRegister/> },
       ],
     },
     {
@@ -53,7 +55,7 @@ function App() {
         {index:true,element:<Home adminData={adminData}/>},
         {path:'recipes',element:<Recipes/>},
         {path:'recipe-data',element:<RecipeData/>},
-        {path:'recipe-update/:id',element:<Recepeupdate/>},
+        {path:'recipe-update',element:<Recepeupdate/>},
         {path:'users',element:<UsersList/>},
         {path:'categories',element:<Categories/>},
       ],

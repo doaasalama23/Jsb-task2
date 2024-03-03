@@ -5,6 +5,13 @@ import { useForm } from 'react-hook-form'
 export default function RecipeData() {
   const[categoriesList,setcategoriesList]=useState([]);
   const[tagsList,settagsList]=useState([]);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const [recipeId, setrecipeId] = useState(0);
+  const handleShow = (id) => {
+    setrecipeId(id)
+    setShow(true)
+  };
     const{register,handleSubmit,formState:{errors},}=useForm(); 
     let navigate=useNavigate();
     const navigateRecipesData=()=>{

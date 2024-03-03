@@ -4,27 +4,64 @@ import bbbb from '../../../assets/images/free.png'
 import nodata from '../../../assets/images/free.png';
 import Header from '../../../Shared/Components/Header/Header';
 import Modal from 'react-bootstrap/Modal';
+import Recepeupdate from '../../../Recepeupdate/Recepeupdate';
 import { useNavigate,Link } from 'react-router-dom';
 export default function Recipes() {
   const[recipesList,setrecipesList]=useState([]);
   const[categoriesList,setcategoriesList]=useState([]);
   const[tagsList,settagsList]=useState([]);
+  const[nameSearch,setnameSearch]=useState('');
+  const[selectedTag,setselectedTag]=useState(0);
+  const[selectedCat,setselectedCat]=useState(0);
+  const [selectedRecipeId, setSelectedRecipeId] = useState(0);
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const [recipeId, setrecipeId] = useState(0);
-  const handleShow = (id) => {
-    setrecipeId(id)
-    setShow(true)
+  // const [recipeId, setrecipeId] = useState(0);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const[pagesArray,setpagesArray]=useState([]);
+  const handleClose = () => {
+    setShow(false);
+    setSelectedRecipe(null);
   };
-  const navigate=useNavigate();
+
+  const handleShow = (recipe) => {
+    setShow(true);
+    setSelectedRecipe(recipe);
+  };
+  const token = localStorage.getItem("adminToken");
+  const navigate = useNavigate();
   const navigateRecipes=()=>{
     navigate('/dashboard/recipe-data');
   };
-  const getList=async()=>{
+  const navigateToEditRecipe = (recipe) => {
+    navigate("/dashboard/recipe-update", {
+      state: {
+        selectedRecipe: recipe,
+        tagsList: tagsList,
+        categoriesList: categoriesList,
+      },
+    });
+  };
+  const getList=async(pageNo,pageSize,name,tagId,catId)=>{
     let token=localStorage.getItem('admintoken');
     try{
-        let recipesList = await axios.get('https://upskilling-egypt.com:443/api/v1/Recipe/?pageSize=10&pageNumber=1',{ headers : {Authorization:token}});
+        let recipesList = await axios.get('https://upskilling-egypt.com:443/api/v1/Recipe',{ headers : {Authorization:token},
+       params:
+          {
+            pageNumber:pageNo,
+            pageSize:pageSize,
+            name:name,
+            categoryId:catId,
+            tagId:tagId
+          },
+      
+      }
         
+
+    );
+    setpagesArray(
+      Array(recipesList.data.totalNumberOfPages).fill().map((_,i)=>i+1)
+    );
+    console.log(recipesList.data.totalNumberOfPages);  
         setrecipesList(recipesList.data.data);
      }catch(error){
     console.log(error);
@@ -61,8 +98,23 @@ export default function Recipes() {
       console.log(error);
       }
   }; 
+  const getNameValue=(input)=>{
+    setnameSearch(input.target.value);
+    getList(1,10,input.target.value,selectedTag,selectedCat);
+  };
+  const getTagValue=(select)=>{
+    setselectedTag(select.target.value);
+    getList(1,10,nameSearch,select.target.value,selectedCat);
+  };
+  const getCatValue=(select)=>{
+    setselectedCat(select.target.value);
+    getList(1,10,nameSearch,selectedTag,select.target.value);
+  };
+  useEffect(() => {
+    setSelectedRecipeId(selectedRecipe?.id || "");
+  }, [selectedRecipe]);
   useEffect(()=>{
-    getList();
+    getList(1,5);
     getCategoriesList();
     getTagList();
   },[]);
@@ -95,12 +147,14 @@ export default function Recipes() {
             <input 
                 type="text" 
                 className="form-control" 
-                placeholder="Search by name" 
+                placeholder="Search by name"
+                onChange={getNameValue} 
               />
             </div>
             <div className='col-md-3'>
             <select className="form-control" 
-                        placeholder="Enter your categoriesIds" 
+                        placeholder="Enter your categoriesIds"
+                        onChange={getCatValue}  
                        >
                         <option value=''>chooes category</option>
                         {categoriesList?.map((cat)=>
@@ -111,7 +165,8 @@ export default function Recipes() {
             </div>
             <div className='col-md-3'>
             <select className="form-control" 
-                      placeholder="Enter your tagId" 
+                      placeholder="Enter your tagId"
+                      onChange={getTagValue}  
                       >
                         <option value=''>chooes tag</option>
                       {tagsList?.map((tag)=>
@@ -121,52 +176,71 @@ export default function Recipes() {
                  </select>
             </div>
           </div>
-      <div className='categories-tables text-center py-4'>
-            {recipesList.length>0?
-            <table className="table">
-            <thead>
+     
+          {recipesList?.length > 0 ? (
+        <div className="table-responsive">
+          <table className="table">
+            <thead className="table-light">
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
-                <th scope="col">description</th>
                 <th scope="col">Image</th>
-                <th scope="col">price</th>
-                {/* <th scope="col">category</th> */}
-                <th scope="col">actions</th>
-                
+                <th scope="col">Price</th>
+                <th scope="col">Description</th>
+                <th scope="col">Tag</th>
+                <th scope="col">Category</th>
+                <th scope="col"></th>
               </tr>
             </thead>
             <tbody>
-              {recipesList.map((recipe)=>
+              {recipesList?.map((recipe) => (
                 <tr key={recipe.id}>
                   <th scope="row">{recipe.id}</th>
-                  <td>{recipe.name}</td>
-                  <td>{recipe.description}</td>
-                  <td>
-                  <img className='load' src={`https://upskilling-egypt.com/${recipe.imagePath}`}/>
-                      {/* {user.imagePath ? ( <img className='load' src={`https://upskilling-egypt.com/${recipe.imagePath}`}/>)
-                      :(<img className='w-25' src={nodata}/>)
-                      } */}
+                  <td>{recipe?.name}</td>
+                  <td className="w-25">
+                    <img
+                      src={
+                        recipe.imagePath
+                          ? `https://upskilling-egypt.com:443/${recipe.imagePath}`
+                          : ""
+                      }
+                      className="w-25"
+                    />
                   </td>
-                  <td>{recipe.price}</td>
-                  {/* <td>{recipe.category[0].name}</td> */}
+                  <td>{recipe?.price}</td>
+                  <td>{recipe?.description}</td>
+                  <td>{recipe?.tag?.name}</td>
+                  <td>{recipe?.category[0]?.name}</td>
                   <td>
-                 <Link to={'/dashboard/recipe-update/'+recipe.id}><i className='far fa-edit text-warning mx-2'></i></Link>
+                  <i className='far fa-edit text-warning mx-2'onClick={() => navigateToEditRecipe(recipe)}></i>
                   <i className='fa fa-trash text-danger' onClick={()=>handleShow(recipe.id)}></i>
                   </td>
-                  {/* <td>
-                    <div className='d-flex justify-content-end me-4'>
-                        <Update catId={cat.id} getList={getList}/>
-                        <Delete catId={cat.id} getList={getList}/>
-                  </div>
-                  </td> */}
-              </tr>
-              )}
-              
+                </tr>
+              ))}
             </tbody>
+
+            <nav aria-label="Page navigation example">
+                  <ul className="pagination">
+                    <li className="page-item">
+                      <a className="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span className="sr-only">Previous</span>
+                      </a>
+                    </li>
+                    {pagesArray.map((pageNo)=> <li key={pageNo} className="page-item" onClick={()=>getList(pageNo,5)}><a className="page-link">{pageNo}</a></li>)}
+                    <li className="page-item">
+                      <a className="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span className="sr-only">Next</span>
+                      </a>
+                    </li>
+                  </ul>
+              </nav>
           </table>
-            :<img src={nodata}/>}
-          </div>
+        </div>
+      ) : (
+        <img src={nodata}/>
+      )}
     </div>
-  )
+  );
 }

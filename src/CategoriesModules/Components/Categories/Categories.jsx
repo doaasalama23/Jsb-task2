@@ -14,11 +14,23 @@ export default function Categories() {
   const handleShow = () => setShow(true);
   const{register,handleSubmit,formState:{errors},}=useForm(); 
   const[categoriesList,setcategoriesList]=useState([]);
-  const getList=async()=>{
+  const[nameSearch,setnameSearch]=useState('');
+  const[pagesArray,setpagesArray]=useState([]);
+  const getList=async(pageNo,pageSize,name)=>{
     let token=localStorage.getItem('admintoken');
     try{
-        let categoriesList = await axios.get('https://upskilling-egypt.com:443/api/v1/Category/?pageSize=10&pageNumber=1',{ headers : {Authorization:token}});
-        
+        let categoriesList = await axios.get('https://upskilling-egypt.com:443/api/v1/Category',{ headers : {Authorization:token},
+        params:
+          {
+            pageNumber:pageNo,
+            pageSize:pageSize,
+            name:name
+          },
+      });
+      console.log(categoriesList);
+      setpagesArray(
+        Array(categoriesList.data.totalNumberOfPages).fill().map((_,i)=>i+1)
+      );
         setcategoriesList(categoriesList.data.data);
      }catch(error){
     console.log(error);
@@ -35,8 +47,12 @@ export default function Categories() {
       console.log(error);
       }
   };
+  const getNameValue=(input)=>{
+    setnameSearch(input.target.value);
+    getList(1,10,input.target.value);
+  };
   useEffect(()=>{
-    getList();
+    getList(1,5);
   },[]);
   return (
     <div>
@@ -83,6 +99,16 @@ export default function Categories() {
               <button className='btn btn-success' onClick={handleShow}>Add new category</button>
             </div>
           </div>
+          <div className='row p-4'>
+            <div className='col-md-6'>
+            <input 
+                type="text" 
+                className="form-control" 
+                placeholder="Search by name"
+                onChange={getNameValue} 
+              />
+            </div>  
+          </div>
           <div className='categories-tables text-center'>
             {categoriesList.length>0?
             <table className="table">
@@ -110,6 +136,25 @@ export default function Categories() {
               )}
               
             </tbody>
+
+
+            <nav aria-label="Page navigation example">
+                  <ul className="pagination">
+                    <li className="page-item">
+                      <a className="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span className="sr-only">Previous</span>
+                      </a>
+                    </li>
+                    {pagesArray.map((pageNo)=> <li key={pageNo} className="page-item" onClick={()=>getList(pageNo,5)}><a className="page-link">{pageNo}</a></li>)}
+                    <li className="page-item">
+                      <a className="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span className="sr-only">Next</span>
+                      </a>
+                    </li>
+                  </ul>
+              </nav>
           </table>
             :<img src={nodata}/>}
           </div>
