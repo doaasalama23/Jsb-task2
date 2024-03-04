@@ -7,6 +7,7 @@ import Modal from 'react-bootstrap/Modal';
 import Recepeupdate from '../../../Recepeupdate/Recepeupdate';
 import { useNavigate,Link } from 'react-router-dom';
 export default function Recipes() {
+  const loginData=(JSON.parse(localStorage.getItem('adminData')));
   const[recipesList,setrecipesList]=useState([]);
   const[categoriesList,setcategoriesList]=useState([]);
   const[tagsList,settagsList]=useState([]);
@@ -94,6 +95,17 @@ export default function Recipes() {
       console.log(response);
       getList();
       handleClose();
+      }catch(error){
+      console.log(error);
+      }
+  }; 
+  const addTofav=async (recipeId)=>{
+    let token=localStorage.getItem('admintoken');
+    try{
+      let response = await axios.post(`https://upskilling-egypt.com:443/api/v1/userRecipe`,{"recipeId":recipeId},{ headers : {Authorization:token}});
+      console.log(response);
+      // getList();
+      // handleClose();
       }catch(error){
       console.log(error);
       }
@@ -212,8 +224,11 @@ export default function Recipes() {
                   <td>{recipe?.tag?.name}</td>
                   <td>{recipe?.category[0]?.name}</td>
                   <td>
+                    {loginData?.userGroup=='SuperAdmin'?(<div>
                   <i className='far fa-edit text-warning mx-2'onClick={() => navigateToEditRecipe(recipe)}></i>
                   <i className='fa fa-trash text-danger' onClick={()=>handleShow(recipe.id)}></i>
+                    </div>):(<i className='far fa-heart text-danger mx-2' onClick={()=>addTofav(recipe.id)}></i>)}
+                    
                   </td>
                 </tr>
               ))}

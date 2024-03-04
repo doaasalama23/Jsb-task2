@@ -31,9 +31,10 @@ export default function SideBar({adminData}) {
         <Menu>
         <MenuItem onClick={toggleCollapsed} icon={<div className='hamada'><img src={logo} alt='loggo' className=''/></div>}></MenuItem>
           <MenuItem icon={<i className='fa fa-home'></i>} component={<Link to="/dashboard" />}>Home</MenuItem>
-          <MenuItem icon={<i className='fa fa-users'></i>} component={<Link to="/dashboard/users" />}>Users</MenuItem>
+          {adminData?.userGroup=='SuperAdmin'?( <MenuItem icon={<i className='fa fa-users'></i>} component={<Link to="/dashboard/users" />}>Users</MenuItem>):('')}
           <MenuItem icon={<i className='fa fa-home'></i>} component={<Link to="/dashboard/recipes" />}> Recipes</MenuItem>
-          <MenuItem icon={<i className='fa fa-home'></i>} component={<Link to="/dashboard/categories" />}> Categories</MenuItem>
+          {adminData?.userGroup=='SystemUser'?( <MenuItem icon={<i className='fa fa-home'></i>} component={<Link to="/dashboard/favourite" />}> Favourite</MenuItem>):('')}
+          {adminData?.userGroup=='SuperAdmin'?( <MenuItem icon={<i className='fa fa-home'></i>} component={<Link to="/dashboard/categories" />}> Categories</MenuItem>):('')}
           <MenuItem onClick={handleShow} icon={<i className='fa fa-home'></i>} component={<Link to="/dashboard/categories" />}> Change password</MenuItem>
           <MenuItem icon={<i className='fa fa-home'></i>}  onClick={logOut}> Logout</MenuItem>
         </Menu>

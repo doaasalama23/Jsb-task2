@@ -20,11 +20,13 @@ import ProtectedRoute from './Shared/Components/ProtectedRoute/ProtectedRoute'
 import Register from './AuthModules/Register/Register'
 import Recepeupdate from './Recepeupdate/Recepeupdate'
 import VerifyRegister from './AuthModules/VerifyRegister/VerifyRegister'
+import Favourite from './Favourite/Favourite'
 function App() {
   const[adminData,setAdminData]=useState(null);
   const saveAdminData=()=>{
     let encodedToken=localStorage.getItem('admintoken');
     let decodeToken=jwtDecode(encodedToken);
+    localStorage.setItem('adminData',JSON.stringify(decodeToken))
     setAdminData(decodeToken);
 
   };
@@ -54,6 +56,7 @@ function App() {
       children:[
         {index:true,element:<Home adminData={adminData}/>},
         {path:'recipes',element:<Recipes/>},
+        {path:'favourite',element:<Favourite/>},
         {path:'recipe-data',element:<RecipeData/>},
         {path:'recipe-update',element:<Recepeupdate/>},
         {path:'users',element:<UsersList/>},

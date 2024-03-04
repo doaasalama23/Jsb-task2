@@ -17,7 +17,6 @@ export default function Register() {
             formData.append('password',data.password);
             formData.append('confirmPassword',data.confirmPassword);
             formData.append('profileImage',data.profileImage[0]);
-            formData.append("userName", data.userName);
         return formData;
     }; 
     const onSubmit = async (data) => {
