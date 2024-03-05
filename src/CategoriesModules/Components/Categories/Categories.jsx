@@ -52,12 +52,12 @@ export default function Categories() {
     getList(1,10,input.target.value);
   };
   useEffect(()=>{
-    getList(1,5);
+    getList(1,40);
   },[]);
   return (
     <div>
        <div>
-          <Header title={'Categories Items'} desc={'This is a welcoming screen for the entry of the application , you can now see the options'} />
+          <Header title={'Categories Items'} description={'This is a welcoming screen for the entry of the application , you can now see the options'} />
 
           <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>

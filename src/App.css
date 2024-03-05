@@ -1,3 +1,9 @@
+*{
+    box-sizing: border-box;
+}
+body{
+    box-sizing: border-box;
+}
 .Auth-container{
      background-image: url(./assets/images/base.jpeg);
      background-size: cover;
@@ -5,11 +11,23 @@
 .overlay{
     background: linear-gradient(45deg,rgba(47,140,96,0.4), rgba(0,0,0,0.4));
 }
+.sidebar-container{
+    height: 100% !important;
+   
+}
+.css-1wvake5{
+    height: 100% !important;
+}
+.sidebar-container .css-1wvake5 {
+    border-right-width: 0 !important;
+    border-right-style: none !important;
+  }
 .sidebar-container .ps-sidebar-container{
    background-color: #1F263E;
+   border-top-right-radius: 50px;
    color: #fff;
-   height: 100vh;
 }
+
 .sidebar-container .ps-sidebar-container .ps-menu-button:hover{
 background-color: rgba(0, 176, 77, .3);
 }
@@ -18,6 +36,7 @@ background-color: rgba(0, 176, 77, .3);
 }
 .sidebar-container .ps-sidebar-container .ps-menu-button img{
     width: 130px;
+   margin-top: 20px;
 }
 .back-g{
     background-image: url(./assets/images/back.png);
@@ -45,4 +64,42 @@ background-color: rgba(0, 176, 77, .3);
 }
 .load{
     width: 70px;
+}
+.header-container {
+    background: url(../src/assets/images/header.png) no-repeat;
+    background-size: cover;
+}
+.lightGreenContainer {
+    background-color: #f0ffef;
+}
+.container {
+    width: 98% !important;
+}
+.lightGreenContainer {
+    background-color: #f0ffef;
+}
+.uploadImg {
+    border: 2px dashed;
+}
+input[type="file"]::file-selector-button {
+    background-color: #fff;
+    color: #000;
+    border: 0px;
+    border-right: 1px solid #e5e5e5;
+    padding: 10px 15px;
+    margin-right: 20px;
+    transition: 0.5s;
+}
+  
+input[type="file"]::file-selector-button:hover {
+    background-color: #eee;
+    border: 0px;
+    border-right: 1px solid #e5e5e5;
+}
+  
+  .selectedImg {
+    width: 100px;
+}
+.card-img-top{
+    height: 10rem;
 }

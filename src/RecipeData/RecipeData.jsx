@@ -2,37 +2,57 @@ import React, { useEffect,useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-export default function RecipeData() {
+import RecipesHeader from '../Shared/Components/RecipesHeader/RecipesHeader';
+export default function RecipeData({adminData}) {
   const[categoriesList,setcategoriesList]=useState([]);
   const[tagsList,settagsList]=useState([]);
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const [recipeId, setrecipeId] = useState(0);
-  const handleShow = (id) => {
-    setrecipeId(id)
-    setShow(true)
-  };
+  let token=localStorage.getItem('admintoken');
+  // const [show, setShow] = useState(false);
+  // const handleClose = () => setShow(false);
+  // const [recipeId, setrecipeId] = useState(0);
+
+  // const handleShow = (id) => {
+  //   setrecipeId(id)
+  //   setShow(true)
+  // };
     const{register,handleSubmit,formState:{errors},}=useForm(); 
     let navigate=useNavigate();
-    const navigateRecipesData=()=>{
-        navigate('recipes');
+  //   const navigateRecipesData=()=>{
+  //       navigate('recipes');
+  // };
+  const convertToFormData = (data) => {
+    const formData = new FormData();
+    formData.append("name", data?.name);
+    formData.append("price", data?.price);
+    formData.append("description", data?.description);
+    formData.append("tagId", data?.tagId);
+    formData.append("categoriesIds", data?.categoriesIds);
+    formData.append("recipeImage", data?.recipeImage[0]);
+    return formData;
   };
   const onSubmitadd= async (data)=>{
-    let token=localStorage.getItem('admintoken');
-    try{
-      let response = await axios.post('https://upskilling-egypt.com:443/api/v1/Recipe/',data,{ headers : {Authorization:token}});
-      console.log(response);
-      handleClose();
-      }catch(error){
-      console.log(error);
-      }
+    const convertedData = convertToFormData(data);
+    try {
+      const response = await axios.post(
+        "https://upskilling-egypt.com:443/api/v1/Recipe/",
+        convertedData,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      navigate("/dashboard/recipes");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
   const getCategoriesList=async()=>{
     let token=localStorage.getItem('admintoken');
     try{
         let categoriesList = await axios.get('https://upskilling-egypt.com:443/api/v1/Category/?pageSize=10&pageNumber=1',{ headers : {Authorization:token}});
         console.log(categoriesList.data.data);
-        setcategoriesList(categoriesList.data.data);
+        setcategoriesList(categoriesList?.data?.data);
      }catch(error){
     console.log(error);
      }
@@ -42,7 +62,7 @@ export default function RecipeData() {
     try{
         let tagsList = await axios.get('https://upskilling-egypt.com:443/api/v1/tag/',{ headers : {Authorization:token}});
         console.log(tagsList.data);
-        settagsList(tagsList.data);
+        settagsList(tagsList?.data);
      }catch(error){
     console.log(error);
      }
@@ -52,89 +72,122 @@ export default function RecipeData() {
     getTagList();
   },[]);
   return (
-    <div>
-        <div className='home-container'>
-            <div className='title d-flex justify-content-between p-4'>
-                <div className='title-info'>
-                    <h3>Fill all <span className='success'>Resapies!</span></h3>
-                    <p>you can can fill now the meals</p>
-                </div>
-                <div className='title-btn'>
-                <button onClick={navigateRecipesData} className='btn btn-success'>Fill Recipes
-                <i className='fa fa-arrow-right mx-2'></i>
-                </button>
-                </div>
-            </div>
-        </div>
-        <form onSubmit={handleSubmit(onSubmitadd)}>
-          <div className='p-5'>
+      <>
+      <RecipesHeader />
+      <div className="container">
+        <div className="row">
+          <div className="col-md-8 mx-auto mt-5 mb-3">
+            <form onSubmit={handleSubmit(onSubmitadd)}>
               <div className="input-group mb-3">
-                  <input 
-                      type="text" 
-                      className="form-control" 
-                      placeholder="Enter your name" 
-                      {...register('name',{required:'name is required',
-                     
-                    })}
-                    />
-                </div>
-                {errors.name&&<span className='alert alert-danger'>{errors.name.message}</span>}
-                <div className="input-group mb-3">
-                 
-                  <input 
-                      type="number" 
-                      className="form-control" 
-                      placeholder="Enter your price" 
-                      {...register('price',{required:'price is required',
-                    })}
-                    />
-                </div>
-                {errors.price&&<span className='alert alert-danger'>{errors.price.message}</span>}
-                <div className="input-group mb-3">
-                 <select className="form-control" 
-                      placeholder="Enter your categoriesIds" 
-                      {...register('categoriesIds',{required:'categoriesIds is required',
-                    })}>
-                      {categoriesList?.map((cat)=>
-                      <option key={cat.id} value={cat.id}>{cat.name}</option>
-                      )}
-                  
-                 </select>
-                </div>
-                {errors.categoriesIdse&&<span className='alert alert-danger'>{errors.categoriesIds.message}</span>}
-                <div className="input-group mb-3">
-                 <select className="form-control" 
-                      placeholder="Enter your tagId" 
-                      {...register('tagId',{required:'tagId is required',
-                    })}>
-                      {tagsList?.map((tag)=>
-                      <option key={tag.id} value={tag.id}>{tag.name}</option>
-                      )}
-                  
-                 </select>
-                </div>
-                {errors.tagId&&<span className='alert alert-danger'>{errors.tagId.message}</span>}
-                <div className="input-group mb-3">
-                  <input 
-                      type="file" 
-                      className="form-control" 
-                      {...register('recipeImage',{required:'recipeImage is required',
-                     
-                    })}
-                    />
-                </div>
-                {errors.recipeImage&&<span className='alert alert-danger'>{errors.recipeImage.message}</span>}
-                <div className="input-group mb-3">
-                  <textarea className='form-control'placeholder="Enter your description"{...register('description',{required:'description is required',
-                    })}  >   
-                  </textarea>
-               </div>
-                {errors.description&&<span className='alert alert-danger'>{errors.description.message}</span>}
-                  <div className='d-flex justify-content-end'>
-                    <button className='btn btn-success'>Save</button>
-                  </div>
+                <input
+                  type="text"
+                  className="form-control bg-light border-0 rounded-4"
+                  placeholder="Recipe Name"
+                  {...register("name", {
+                    required: "Recipe name is required",
+                  })}
+                />
               </div>
-              </form>
-    </div>
-  )
+              {errors.name && (
+                <div className="alert alert-danger py-1">
+                  {errors.name.message}
+                </div>
+              )}
+              <div className="input-group mb-3">
+                <select
+                  className="form-control w-100 border-0 bg-light rounded-4"
+                  {...register("tagId", {
+                    required: "Tag is required",
+                  })}
+                >
+                  <option value="Tag" disabled selected>
+                    Tag
+                  </option>
+                  {tagsList?.map((tag) => (
+                    <option key={tag?.id} value={tag?.id}>
+                      {tag?.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {errors.tagId && (
+                <div className="alert alert-danger py-1">
+                  {errors.tagId.message}
+                </div>
+              )}
+              <div className="input-group rounded-3 mb-3">
+                <input
+                  type="number"
+                  className="form-control bg-light border-0 rounded-4"
+                  placeholder="Price"
+                  {...register("price", {
+                    required: "Price is required",
+                  })}
+                />
+              </div>
+              {errors.price && (
+                <div className="alert alert-danger py-1">
+                  {errors.price.message}
+                </div>
+              )}
+              <div className="input-group mb-3">
+                <select
+                  className="w-100 border-0 bg-light rounded-4 form-control"
+                  {...register("categoriesIds", {
+                    required: "Category is required",
+                  })}
+                >
+                  <option value="Category" disabled selected>
+                    Category
+                  </option>
+                  {categoriesList?.map((cat) => (
+                    <option
+                      key={cat?.id}
+                      value={cat?.id}
+                      placeholder="Category"
+                    >
+                      {cat?.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {errors.categoriesIds && (
+                <div className="alert alert-danger py-1">
+                  {errors.categoriesIds.message}
+                </div>
+              )}
+              <textarea
+                rows={4}
+                placeholder="Description"
+                className="w-100 bg-light border-0 rounded-4 form-control"
+                {...register("description", {
+                  required: "Description is required",
+                })}
+              />
+              {errors.description && (
+                <div className="alert alert-danger py-1">
+                  {errors.description.message}
+                </div>
+              )}
+              <div className="uploadImg border-success lightGreenContainer mt-2 p-3 d-flex flex-column align-items-center">
+                <i className="fa-solid fa-upload mb-2"></i>
+                <input type="file" role="button" {...register("recipeImage")} />
+              </div>
+              <div className="d-flex justify-content-end mt-4">
+                <button
+                  className="btn btn-outline-success me-4 px-5"
+                  onClick={() => {
+                    navigate("/dashboard/recipes");
+                  }}
+                >
+                  Cancel
+                </button>
+                <button className="btn btn-success px-4">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }

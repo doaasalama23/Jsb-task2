@@ -1,8 +1,9 @@
-import React, { useEffect,useState } from 'react'
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
+import RecipesHeader from "../Shared/Components/RecipesHeader/RecipesHeader";
 export default function Recepeupdate() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -11,7 +12,7 @@ export default function Recepeupdate() {
   );
   const { tagsList, categoriesList } = location.state;
   const [isImageChanged, setIsImageChanged] = useState(false);
-  const token = localStorage.getItem("adminToken");
+  const token=localStorage.getItem('admintoken');
   const {
     register,
     handleSubmit,
@@ -68,6 +69,7 @@ export default function Recepeupdate() {
 
   return (
     <>
+    <RecipesHeader edit />
       <div className="container">
         <div className="row">
           <div className="col-md-8 mx-auto mt-5 mb-3">

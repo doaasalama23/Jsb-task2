@@ -21,6 +21,7 @@ import Register from './AuthModules/Register/Register'
 import Recepeupdate from './Recepeupdate/Recepeupdate'
 import VerifyRegister from './AuthModules/VerifyRegister/VerifyRegister'
 import Favourite from './Favourite/Favourite'
+import DeleteModel from './Shared/Components/DeleteModel/DeleteModel'
 function App() {
   const[adminData,setAdminData]=useState(null);
   const saveAdminData=()=>{

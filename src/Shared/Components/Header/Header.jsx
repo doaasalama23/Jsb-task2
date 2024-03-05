@@ -1,15 +1,18 @@
 import React from 'react'
-import headerBg from '../../../assets/images/eating.png'
-export default function Header({title,desc}) {
+import headerImg from "../../../assets/images/headerImg.png";
+import headerImg2 from "../../../assets/images/headerImg2.png";
+export default function Header({ title, description, home }) {
   return (
-    <div className='container-fluid back-g'>
-      <div className='row justify-content-between'>
-      <div className='col-md-5 moday'>
-        <h2>{title}</h2>
-        <p>{desc}</p>
+    <div className="header-container row justify-content-between align-items-center px-5">
+      <div className="col-md-7">
+        <div className="header-content">
+          <h2 className="text-light fs-1">{title}</h2>
+          <p className="text-light lh-sm">{description}</p>
+        </div>
       </div>
-      <div className='col-md-4'><img src={headerBg}/></div>
+      <div className="col-md-3 me-2">
+        <img src={home ? headerImg : headerImg2} className={home && "w-100"} />
       </div>
     </div>
-  )
+  );
 }

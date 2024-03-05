@@ -4,11 +4,13 @@ import bbbb from '../../../assets/images/free.png'
 import nodata from '../../../assets/images/free.png';
 import Header from '../../../Shared/Components/Header/Header';
 import Modal from 'react-bootstrap/Modal';
+import { Button } from 'react-bootstrap';
 import Recepeupdate from '../../../Recepeupdate/Recepeupdate';
 import { useNavigate,Link } from 'react-router-dom';
-export default function Recipes() {
+import DeleteRec from '../../../DeleteRec/DeleteRec';
+export default function Recipes({adminData}) {
   const loginData=(JSON.parse(localStorage.getItem('adminData')));
-  const[recipesList,setrecipesList]=useState([]);
+  const [recipesList, setrecipesList] = useState([]);
   const[categoriesList,setcategoriesList]=useState([]);
   const[tagsList,settagsList]=useState([]);
   const[nameSearch,setnameSearch]=useState('');
@@ -16,7 +18,7 @@ export default function Recipes() {
   const[selectedCat,setselectedCat]=useState(0);
   const [selectedRecipeId, setSelectedRecipeId] = useState(0);
   const [show, setShow] = useState(false);
-  // const [recipeId, setrecipeId] = useState(0);
+  const [recipeId, setrecipeId] = useState(0);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const[pagesArray,setpagesArray]=useState([]);
   const handleClose = () => {
@@ -28,7 +30,7 @@ export default function Recipes() {
     setShow(true);
     setSelectedRecipe(recipe);
   };
-  const token = localStorage.getItem("adminToken");
+  const token = localStorage.getItem("admintoken");
   const navigate = useNavigate();
   const navigateRecipes=()=>{
     navigate('/dashboard/recipe-data');
@@ -131,8 +133,8 @@ export default function Recipes() {
     getTagList();
   },[]);
   return (
-    <div>
-      <Header title={'Recipes Items'} desc={'This is a welcoming screen for the entry of the application , you can now see the options'} />
+    <div className="container">
+      <Header title={'Recipes Items'} description={'This is a welcoming screen for the entry of the application , you can now see the options'} />
       <Modal show={show} onHide={handleClose}>
             <Modal.Body>
             <div className='text-center'>
@@ -145,7 +147,7 @@ export default function Recipes() {
                   </div>
             </Modal.Body>
           </Modal>
-          <div className='title d-flex justify-content-between p-4'>
+          {/* <div className='title d-flex justify-content-between p-4'>
             <div className='title-info'>
                 <h5>Recipes tables details</h5>
                 <h6>you can check all details</h6>
@@ -153,7 +155,25 @@ export default function Recipes() {
             <div className='title-btn'>
               <button className='btn btn-success' onClick={navigateRecipes}>Add new Recipe</button>
             </div>
+          </div> */}
+      {loginData?.userGroup=='SuperAdmin'?(
+        <div className="categories-container">
+          <div className="title-info d-flex justify-content-between align-items-center p-4">
+            <div className="title">
+              <h5 className="lh-1">Recipes Table Details</h5>
+              <h6 className="lh-1 text-muted">You can check all details</h6>
+            </div>
+            <div className="btn-container">
+              <Button
+                className="btn btn-success px-5 text-capitalize"
+                onClick={navigateRecipes}
+              >
+                Add new Item
+              </Button>
+            </div>
           </div>
+        </div>
+      ):('')}
           <div className='row p-4'>
             <div className='col-md-6'>
             <input 
@@ -224,9 +244,10 @@ export default function Recipes() {
                   <td>{recipe?.tag?.name}</td>
                   <td>{recipe?.category[0]?.name}</td>
                   <td>
-                    {loginData?.userGroup=='SuperAdmin'?(<div>
+                  {loginData?.userGroup=='SuperAdmin'?(<div className='d-flex'>
                   <i className='far fa-edit text-warning mx-2'onClick={() => navigateToEditRecipe(recipe)}></i>
-                  <i className='fa fa-trash text-danger' onClick={()=>handleShow(recipe.id)}></i>
+                  <DeleteRec recipeId={recipe.id} getList={getList}/>
+                  
                     </div>):(<i className='far fa-heart text-danger mx-2' onClick={()=>addTofav(recipe.id)}></i>)}
                     
                   </td>
