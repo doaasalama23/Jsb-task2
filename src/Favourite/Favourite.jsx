@@ -67,9 +67,9 @@ export default function Favourite() {
         <div className='row p-4'>
             {favList?.length>0 ?(
             favList.map((fav)=>
-            <div className='col-md-4 mb-3'>
-                    <div className='card text-center rounded-5'>
-                            <img className='card-img-top rounded-5' src={`https://upskilling-egypt.com/${fav.recipe?.imagePath}`} />
+            <div className='col-md-3 mb-3'>
+                    <div className='card  rounded-5 card-fav text-center'>
+                            <img className='card-img-top card-fav rounded-5' src={`https://upskilling-egypt.com/${fav.recipe?.imagePath}`} />
                             <div className='card-body'>
                               <h3>{fav.recipe?.name}</h3>
                               <h3>{fav.recipe?.description}</h3>

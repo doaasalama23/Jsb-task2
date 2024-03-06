@@ -244,7 +244,7 @@ export default function Recipes({adminData}) {
                   <td>{recipe?.tag?.name}</td>
                   <td>{recipe?.category[0]?.name}</td>
                   <td>
-                  {loginData?.userGroup=='SuperAdmin'?(<div className='d-flex'>
+                  {loginData?.userGroup=='SuperAdmin'?(<div className='d-flex justify-content-center align-items-center'>
                   <i className='far fa-edit text-warning mx-2'onClick={() => navigateToEditRecipe(recipe)}></i>
                   <DeleteRec recipeId={recipe.id} getList={getList}/>
                   

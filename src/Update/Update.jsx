@@ -2,12 +2,12 @@ import React, {useEffect, useState } from 'react'
 import Modal from 'react-bootstrap/Modal';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-export default function Update({catId,getList}) {
+export default function Update({catId,getList,catName}) {
   const [categoryName, setcategoryName] = useState();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const{register,handleSubmit,formState:{errors},}=useForm(); 
+  const{register,handleSubmit,formState:{errors},setValue}=useForm(); 
   const onSubmitupdate= async (data)=>{
     let token=localStorage.getItem('admintoken');
     try{
@@ -20,8 +20,8 @@ export default function Update({catId,getList}) {
       }
   }; 
   useEffect(()=>{
-    setcategoryName('name',categoryName);
-  },[categoryName]);
+    setValue("name",catName)
+  },[catName])
   return (
     <div>
       <i className='far fa-edit mx-2'onClick={handleShow}></i>
@@ -49,7 +49,7 @@ export default function Update({catId,getList}) {
                 </div>
                 {errors.name&&<span className='alert alert-danger'>{errors.name.message}</span>}
                   <div className='d-flex justify-content-end'>
-                    <button className='btn btn-success'>Save</button>
+                    <button className='btn btn-success'>Edite</button>
                   </div>
               </form>
             </Modal.Body>

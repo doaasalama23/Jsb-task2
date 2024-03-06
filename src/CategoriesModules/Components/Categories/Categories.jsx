@@ -8,6 +8,8 @@ import { useForm } from 'react-hook-form'
 import {Link ,useNavigate } from 'react-router-dom';
 import Update from '../../../Update/Update';
 import Delete from '../../../Delete/Delete';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export default function Categories() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -16,8 +18,9 @@ export default function Categories() {
   const[categoriesList,setcategoriesList]=useState([]);
   const[nameSearch,setnameSearch]=useState('');
   const[pagesArray,setpagesArray]=useState([]);
+  let token=localStorage.getItem('admintoken');
   const getList=async(pageNo,pageSize,name)=>{
-    let token=localStorage.getItem('admintoken');
+
     try{
         let categoriesList = await axios.get('https://upskilling-egypt.com:443/api/v1/Category',{ headers : {Authorization:token},
         params:
@@ -31,18 +34,24 @@ export default function Categories() {
       setpagesArray(
         Array(categoriesList.data.totalNumberOfPages).fill().map((_,i)=>i+1)
       );
-        setcategoriesList(categoriesList.data.data);
+      setcategoriesList(categoriesList.data.data);
      }catch(error){
     console.log(error);
      }
   };
   const onSubmitadd= async (data)=>{
-    let token=localStorage.getItem('admintoken');
-    try{
-      let response = await axios.post('https://upskilling-egypt.com:443/api/v1/Category/',data,{ headers : {Authorization:token}});
+    try {
+      let response = await axios.post(
+        "https://upskilling-egypt.com:443/api/v1/Category/",
+        data,
+        {
+          headers: { Authorization: token },
+        }
+      );
       console.log(response);
       getList();
       handleClose();
+      toast.success("Add is successfully");
       }catch(error){
       console.log(error);
       }
@@ -52,7 +61,7 @@ export default function Categories() {
     getList(1,10,input.target.value);
   };
   useEffect(()=>{
-    getList(1,40);
+    getList(1,5);
   },[]);
   return (
     <div>
@@ -114,7 +123,7 @@ export default function Categories() {
             <table className="table">
             <thead>
               <tr>
-                <th scope="col">#</th>
+                <th scope="col">Id</th>
                 <th scope="col">Ctegory name</th>
                 <th scope="col">
                 actions
@@ -128,7 +137,7 @@ export default function Categories() {
                 <td>{cat.name}</td>
                 <td>
                   <div className='d-flex justify-content-end me-4'>
-                      <Update catId={cat.id} getList={getList}/>
+                      <Update catId={cat.id} catName={cat.name} getList={getList}/>
                       <Delete catId={cat.id} getList={getList}/>
                 </div>
                 </td>
@@ -136,8 +145,7 @@ export default function Categories() {
               )}
               
             </tbody>
-
-
+            
             <nav aria-label="Page navigation example">
                   <ul className="pagination">
                     <li className="page-item">
