@@ -54,6 +54,14 @@ background-color: rgba(0, 176, 77, .3);
     width: 130px;
    margin-top: 20px;
 }
+
+.sidebar-container{
+    position:fixed;
+    top:0;
+    left:0;
+    z-index:1;
+    height:100dvh;
+}
 .back-g{
     background-image: url(./assets/images/back.png);
     background-position: center;

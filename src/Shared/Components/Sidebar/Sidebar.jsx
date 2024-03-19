@@ -21,6 +21,8 @@ export default function SideBar({adminData}) {
     navigate('/login');
   };
   return (
+    <div style={{width:isCollapsed?"5rem":"20rem"}}>
+
     <div className='sidebar-container'>
           <Modal show={show} onHide={handleClose}>
             <Modal.Body>
@@ -39,6 +41,7 @@ export default function SideBar({adminData}) {
           <MenuItem icon={<i className='fa-solid fa-right-from-bracket'></i>}  onClick={logOut}> Logout</MenuItem>
         </Menu>
       </Sidebar>
+    </div>
     </div>
   )
 }
